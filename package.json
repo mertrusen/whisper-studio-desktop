@@ -39,8 +39,12 @@
       "createDesktopShortcut": true
     },
     "mac": {
-      "target": ["dmg"],
-      "category": "public.app-category.video"
+      "target": [{ "target": "dmg", "arch": "universal" }],
+      "category": "public.app-category.video",
+      "artifactName": "WhisperStudio-${version}-mac.${ext}"
+    },
+    "dmg": {
+      "writeUpdateInfo": false
     }
   }
 }
