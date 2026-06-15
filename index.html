@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Whisper Studio</title>
+  <title>Subsper</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -10,9 +10,9 @@
   <!-- Header -->
   <div class="header">
     <div class="brand">
-      <span class="brand-mark">W</span>
+      <span class="brand-mark" data-icon="captions"></span>
       <div class="brand-text">
-        <span class="brand-title">Whisper <span>Studio</span></span>
+        <span class="brand-title">Sub<span>sper</span></span>
         <span class="brand-tagline" data-i18n="tagline">AI Subtitles</span>
       </div>
     </div>
@@ -28,16 +28,16 @@
   <!-- ── Main tabs (top level) ───────────────────────────────────────── -->
   <div class="tabs">
     <button class="tab active" id="tab-transcribe" onclick="switchMainTab('transcribe')" data-i18n-tip="tip_tab_transcribe">
-      <span class="tab-ico">🎬</span><span data-i18n="tab_transcribe">Subtitles</span>
+      <span class="tab-ico ic" data-icon="captions"></span><span data-i18n="tab_transcribe">Subtitles</span>
     </button>
     <button class="tab" id="tab-edit" onclick="switchMainTab('edit')" data-i18n-tip="tip_tab_edit">
-      <span class="tab-ico">✂️</span><span data-i18n="tab_edit">Edit</span>
+      <span class="tab-ico ic" data-icon="scissors"></span><span data-i18n="tab_edit">Edit</span>
     </button>
     <button class="tab" id="tab-audio" onclick="switchMainTab('audio')" data-i18n-tip="tip_tab_audio">
-      <span class="tab-ico">🔊</span><span data-i18n="tab_audio">Audio</span>
+      <span class="tab-ico ic" data-icon="volume"></span><span data-i18n="tab_audio">Audio</span>
     </button>
     <button class="tab" id="tab-setup" onclick="switchMainTab('setup')" data-i18n-tip="tip_tab_setup">
-      <span class="tab-ico">⚙️</span><span data-i18n="tab_setup">Setup</span>
+      <span class="tab-ico ic" data-icon="settings"></span><span data-i18n="tab_setup">Setup</span>
       <span class="tab-badge" id="setup-badge" style="display:none">!</span>
     </button>
   </div>
@@ -48,7 +48,7 @@
       <span data-i18n="sub_work_tx">Edit</span>
     </button>
     <button class="sub-tab" id="sub-tab-tx-settings" onclick="switchSubTab('transcribe','settings')" data-i18n-tip="tip_sub_tx_settings">
-      ⚙ <span data-i18n="sub_settings">Settings</span>
+      <span class="ic ic-sm" data-icon="settings"></span> <span data-i18n="sub_settings">Settings</span>
     </button>
   </div>
 
@@ -58,7 +58,7 @@
       <span data-i18n="sub_actions">Tools</span>
     </button>
     <button class="sub-tab" id="sub-tab-ed-settings" onclick="switchSubTab('edit','settings')" data-i18n-tip="tip_sub_sl_settings">
-      ⚙ <span data-i18n="sub_settings">Settings</span>
+      <span class="ic ic-sm" data-icon="settings"></span> <span data-i18n="sub_settings">Settings</span>
     </button>
   </div>
 
@@ -68,7 +68,7 @@
       <span data-i18n="sub_actions">Tools</span>
     </button>
     <button class="sub-tab" id="sub-tab-au-settings" onclick="switchSubTab('audio','settings')" data-i18n-tip="tip_sub_au_work">
-      ⚙ <span data-i18n="sub_settings">Settings</span>
+      <span class="ic ic-sm" data-icon="settings"></span> <span data-i18n="sub_settings">Settings</span>
     </button>
   </div>
 
@@ -81,14 +81,14 @@
 
     <div class="controls">
       <button class="btn-transcribe" id="transcribe-btn" onclick="startTranscription()" data-i18n-tip="tip_transcribe">
-        <span class="ico">🎙️</span><span data-i18n="btn_transcribe">Transcribe In/Out Selection</span>
+        <span class="ico ic" data-icon="mic"></span><span data-i18n="btn_transcribe">Transcribe In/Out Selection</span>
       </button>
       <div class="transport-row">
         <button class="btn-load-srt" onclick="importSRTFile()" style="margin-top:0" data-i18n-tip="tip_loadsrt">
-          📂 <span data-i18n="btn_loadsrt">Load SRT</span>
+          <span class="ic" data-icon="folder"></span><span data-i18n="btn_loadsrt">Load SRT</span>
         </button>
         <button class="btn-playpause" id="playpause-btn" onclick="playPause()" data-i18n-tip="tip_play">
-          ▶&nbsp; <span data-i18n="btn_play">Play</span>
+          <span class="ic" data-icon="play"></span><span data-i18n="btn_play">Play</span>
         </button>
       </div>
       <input type="file" id="srt-file-input" accept=".srt" style="display:none">
@@ -97,8 +97,8 @@
     <!-- SRT saved confirmation -->
     <div class="srt-saved-panel" id="srt-saved-panel" style="display:none">
       <div class="srt-saved-header">
-        <span>✅ SRT Saved</span>
-        <button class="error-close" onclick="hideSRTSaved()">✕</button>
+        <span><span class="ic" data-icon="check"></span> SRT Saved</span>
+        <button class="error-close" onclick="hideSRTSaved()"><span class="ic" data-icon="close"></span></button>
       </div>
       <div class="srt-saved-body">
         <p>Now import it into Premiere:</p>
@@ -108,7 +108,7 @@
         </ol>
         <div class="srt-saved-path-row">
           <code id="srt-saved-path"></code>
-          <button id="srt-saved-reveal" class="btn-reveal">📂 Reveal</button>
+          <button id="srt-saved-reveal" class="btn-reveal"><span class="ic" data-icon="folder"></span> Reveal</button>
         </div>
       </div>
     </div>
@@ -116,8 +116,8 @@
     <!-- Error detail -->
     <div class="error-panel" id="error-panel" style="display:none">
       <div class="error-header">
-        <span>⚠️ Error</span>
-        <button class="error-close" onclick="hideError()">✕</button>
+        <span><span class="ic" data-icon="alert"></span> Error</span>
+        <button class="error-close" onclick="hideError()"><span class="ic" data-icon="close"></span></button>
       </div>
       <div class="error-what" id="error-what"></div>
       <div class="error-why" id="error-why" style="display:none">
@@ -157,7 +157,7 @@
     <!-- Segments list -->
     <div class="segments-wrap" id="segments-wrap">
       <div class="empty-state">
-        <div class="icon">🎬</div>
+        <div class="icon" data-icon="captions"></div>
         <p data-i18n="empty_p">Set In (I) and Out (O) points on your timeline, then click Transcribe.</p>
         <p class="hint" data-i18n="empty_hint">Click a word to split there · double-click text to edit.</p>
       </div>
@@ -166,10 +166,10 @@
     <!-- Actions bar -->
     <div class="actions-bar" id="actions-bar" style="display:none">
       <span class="seg-count" id="seg-count" data-i18n-tip="tip_segcount"></span>
-      <button class="btn-secondary" onclick="toggleFindReplace()" data-i18n-tip="tip_find">🔍</button>
-      <button class="btn-secondary" id="punct-btn" onclick="fixPunctuation()" data-i18n-tip="tip_punct">¶</button>
+      <button class="btn-secondary" onclick="toggleFindReplace()" data-i18n-tip="tip_find"><span class="ic" data-icon="search"></span></button>
+      <button class="btn-secondary" id="punct-btn" onclick="fixPunctuation()" data-i18n-tip="tip_punct"><span class="ic" data-icon="pilcrow"></span></button>
       <div class="export-wrap">
-        <button class="btn-secondary" onclick="toggleCleanMenu()" data-i18n-tip="tip_clean">🧹</button>
+        <button class="btn-secondary" onclick="toggleCleanMenu()" data-i18n-tip="tip_clean"><span class="ic" data-icon="sparkles"></span></button>
         <div class="export-menu" id="clean-menu" style="display:none">
           <div class="export-menu-title" data-i18n="clean_title">Clean up…</div>
           <button onclick="cleanMenuAction('dict')" data-i18n-tip="tip_clean_dict"><span data-i18n="clean_dict">Apply Dictionary</span><span>A→B</span></button>
@@ -179,7 +179,7 @@
         </div>
       </div>
       <div class="export-wrap">
-        <button class="btn-secondary" onclick="toggleExportMenu()" data-i18n-tip="tip_export">⬇</button>
+        <button class="btn-secondary" onclick="toggleExportMenu()" data-i18n-tip="tip_export"><span class="ic" data-icon="download"></span></button>
         <div class="export-menu" id="export-menu" style="display:none">
           <div class="export-menu-title" data-i18n="export_title">Export as…</div>
           <button onclick="exportAs('srt')" data-i18n-tip="tip_export_srt"><span data-i18n="export_srt">SubRip</span><span>.srt</span></button>
@@ -190,7 +190,7 @@
       </div>
       <button class="btn-secondary" onclick="clearAll()" data-i18n-tip="tip_clear" data-i18n="act_clear">Clear</button>
       <button class="btn-send" id="send-btn" onclick="sendToPremiere()" disabled data-i18n-tip="tip_send">
-        📤 <span data-i18n="act_send">Send to Premiere</span>
+        <span class="ic" data-icon="send"></span><span data-i18n="act_send">Send to Premiere</span>
       </button>
     </div>
 
@@ -365,7 +365,7 @@
           <textarea id="set-profanity" class="settings-textarea" rows="2"
                     placeholder="word1, word2"
                     oninput="onSettingChange('profanityList', this.value)"></textarea>
-          <div class="setting-hint" data-i18n="hint_cleanrun">Run any of these from the 🧹 menu on the Subtitles tab.</div>
+          <div class="setting-hint" data-i18n="hint_cleanrun">Run any of these from the clean-up menu on the Subtitles tab.</div>
         </div>
       </div>
 
@@ -518,10 +518,10 @@
       <div class="setup-section-title" data-i18n="sec_silence">Silence</div>
       <div class="setting-item">
         <button class="btn-transcribe btn-compact" id="silence-btn" onclick="detectSilences()" style="margin-top:0;margin-bottom:7px" data-i18n-tip="tip_mark">
-          <span class="ico">🔖</span><span data-i18n="btn_mark">Detect &amp; Mark Silences</span>
+          <span class="ico ic" data-icon="bookmark"></span><span data-i18n="btn_mark">Detect &amp; Mark Silences</span>
         </button>
         <button class="btn-transcribe btn-compact btn-warn" id="silence-cut-btn" onclick="cutSilences()" data-i18n-tip="tip_cut">
-          <span class="ico">✂️</span><span data-i18n="btn_cut">Cut Silences (ripple delete)</span>
+          <span class="ico ic" data-icon="scissors"></span><span data-i18n="btn_cut">Cut Silences (ripple delete)</span>
         </button>
         <div class="setting-hint" style="margin-top:8px" data-i18n="hint_cut">Cut is experimental — best on simple single-camera timelines. Undo with Ctrl/Cmd+Z.</div>
       </div>
@@ -530,7 +530,7 @@
       <div class="setting-item">
         <p class="panel-intro" data-i18n="ds_zoom">Adds a subtle slow push-in to each clip in the selection for energy — like AutoCut/FireCut.</p>
         <button class="btn-transcribe btn-compact" id="zoom-btn" onclick="applyAutoZoom()" style="margin-top:0" data-i18n-tip="tip_zoom">
-          <span class="ico">⚡</span><span data-i18n="btn_zoom">Apply Auto Zoom</span>
+          <span class="ico ic" data-icon="zap"></span><span data-i18n="btn_zoom">Apply Auto Zoom</span>
         </button>
         <div class="setting-hint" style="margin-top:8px" data-i18n="hint_zoom">Adds Motion → Scale keyframes to clips in the In/Out range. Experimental — undo with Ctrl/Cmd+Z.</div>
       </div>
@@ -604,7 +604,7 @@
       <div class="setting-item">
         <p class="panel-intro" data-i18n="hint_enhance">Cleans the In/Out audio (denoise + loudness normalize) and imports it to a “Whisper Audio” bin.</p>
         <button class="btn-transcribe btn-compact" id="enhance-btn" onclick="enhanceAudio()" style="margin-top:0" data-i18n-tip="tip_enhance">
-          <span class="ico">🎚</span><span data-i18n="btn_enhance">Enhance Audio — denoise + normalize</span>
+          <span class="ico ic" data-icon="sliders"></span><span data-i18n="btn_enhance">Enhance Audio — denoise + normalize</span>
         </button>
       </div>
     </div>
@@ -658,8 +658,8 @@
       <div class="setup-notes" id="setup-notes"></div>
 
       <div class="setup-btn-row">
-        <button class="btn-recheck" onclick="runDiagnostics()" data-i18n-tip="tip_recheck">🔄 <span data-i18n="btn_recheck">Re-check</span></button>
-        <button class="btn-reload"  onclick="reloadExtension()" data-i18n-tip="tip_reload">↺ <span data-i18n="btn_reload">Reload Extension</span></button>
+        <button class="btn-recheck" onclick="runDiagnostics()" data-i18n-tip="tip_recheck"><span class="ic" data-icon="refresh"></span> <span data-i18n="btn_recheck">Re-check</span></button>
+        <button class="btn-reload"  onclick="reloadExtension()" data-i18n-tip="tip_reload"><span class="ic" data-icon="reload"></span> <span data-i18n="btn_reload">Reload Extension</span></button>
       </div>
 
     </div>

@@ -411,6 +411,24 @@ mark.find-hit { background: var(--yellow); color: #1a1206; border-radius: 3px; p
 }
 .ws-tooltip.show { opacity: 1; transform: none; }
 
+/* ── Icon system (SVG line icons) ────────────────────────────────── */
+.ic { display: inline-flex; align-items: center; justify-content: center; width: 1.1em; height: 1.1em; flex-shrink: 0; line-height: 0; }
+.ic-sm { width: 0.92em; height: 0.92em; }
+.svg-ic { width: 100%; height: 100%; display: block; }
+.brand-mark svg { width: 17px; height: 17px; }
+.tab-ico { width: 1.25em; height: 1.25em; }
+.btn-transcribe .ico { width: 1.2em; height: 1.2em; }
+/* make icon-bearing buttons center their contents */
+.btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-recheck, .btn-reload { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+.btn-reveal { display: inline-flex; align-items: center; gap: 5px; }
+.error-close { display: inline-flex; align-items: center; }
+.error-close .ic { width: 13px; height: 13px; }
+.srt-saved-header span .ic, .error-header span .ic { width: 14px; height: 14px; vertical-align: -2px; }
+.btn-secondary.busy { opacity: .55; }
+.seg-btn .ic { width: 13px; height: 13px; }
+.empty-state .icon .svg-ic { width: 44px; height: 44px; opacity: .85; }
+
 /* ── Full-screen / wide-window optimization ──────────────────────────
    On a maximized desktop window the content centers into a comfortable
    column instead of stretching edge-to-edge. The narrow CEP panel never

@@ -12,8 +12,8 @@ function createWindow() {
     height: 880,
     minWidth: 380,
     minHeight: 600,
-    backgroundColor: "#1a1a1a",
-    title: "Whisper Studio",
+    backgroundColor: "#0e1014",
+    title: "Subsper",
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,   // local desktop tool — renderer needs Node + spawn

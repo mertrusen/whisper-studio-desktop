@@ -1,4 +1,4 @@
-# Whisper Studio — Desktop
+# Subsper — Desktop
 
 Local AI subtitles, audio cleanup & silence cutting for **CapCut** (or any editor).
 No Premiere needed. Runs on **Windows** and macOS. 100% offline & free.
@@ -51,7 +51,7 @@ don't need a Windows PC.
 cd WhisperStudioDesktop
 git init
 git add .
-git commit -m "Whisper Studio Desktop"
+git commit -m "Subsper Desktop"
 gh repo create whisper-studio-desktop --public --source=. --push
 ```
 

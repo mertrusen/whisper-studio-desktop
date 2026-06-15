@@ -295,7 +295,7 @@
 
   // ── DOM tweaks: relabel & inject desktop-specific controls ────────────────
   function tweakUI() {
-    document.title = "Whisper Studio (Desktop)";
+    document.title = "Subsper (Desktop)";
     // Tagline shows "Desktop" — DON'T touch the status-indicator dot.
     const tag = document.querySelector(".brand-tagline");
     if (tag) tag.textContent = "Desktop";
@@ -306,7 +306,7 @@
       const openBtn = document.createElement("button");
       openBtn.className = "btn-transcribe";
       openBtn.style.cssText = "margin-top:0;margin-bottom:10px;background:var(--bg3);border:1px solid var(--border2);box-shadow:none;color:var(--text)";
-      openBtn.innerHTML = "📁 &nbsp;<span>Open Video / Audio File</span>";
+      openBtn.innerHTML = '<span class="ic">' + (typeof icon === "function" ? icon("folder") : "") + '</span><span>Open Video / Audio File</span>';
       openBtn.setAttribute("data-tip", "Bilgisayardan bir video/ses dosyası seç (pencereye sürükle-bırak da olur)");
       openBtn.onclick = pickMedia;
 

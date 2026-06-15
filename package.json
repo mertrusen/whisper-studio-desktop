@@ -1,8 +1,8 @@
 {
-  "name": "whisper-studio-desktop",
-  "productName": "Whisper Studio",
-  "version": "1.0.1",
-  "description": "Local Whisper AI subtitles, audio cleanup & silence cutting — for CapCut and any editor.",
+  "name": "subsper",
+  "productName": "Subsper",
+  "version": "1.1.0",
+  "description": "Subsper — local AI subtitles, audio cleanup & silence cutting for CapCut and any editor.",
   "main": "electron-main.js",
   "author": "Whisper Studio",
   "license": "MIT",
@@ -17,8 +17,8 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.whisper.studio.desktop",
-    "productName": "Whisper Studio",
+    "appId": "com.subsper.app",
+    "productName": "Subsper",
     "files": [
       "electron-main.js",
       "index.html",
@@ -36,7 +36,7 @@
       "target": [
         "nsis"
       ],
-      "artifactName": "WhisperStudio-Setup-${version}.${ext}"
+      "artifactName": "Subsper-Setup-${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -51,10 +51,11 @@
         }
       ],
       "category": "public.app-category.video",
-      "artifactName": "WhisperStudio-${version}-mac.${ext}"
+      "artifactName": "Subsper-${version}-mac.${ext}"
     },
     "dmg": {
       "writeUpdateInfo": false
-    }
+    },
+    "icon": "build/icon.png"
   }
 }
