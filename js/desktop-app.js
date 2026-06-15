@@ -24,30 +24,8 @@
     return "file://" + encodeURI(n).replace(/#/g, "%23");
   }
 
-  // ── Python discovery (Windows-aware) ──────────────────────────────────────
-  // Override main.js's mac-only findPython.
-  findPython = function () {
-    const isWin = process.platform === "win32";
-    const candidates = isWin
-      ? [
-          "python", "python3",
-          "C:/Python313/python.exe", "C:/Python312/python.exe", "C:/Python311/python.exe",
-          process.env.LOCALAPPDATA ? process.env.LOCALAPPDATA + "/Programs/Python/Python313/python.exe" : "",
-          process.env.LOCALAPPDATA ? process.env.LOCALAPPDATA + "/Programs/Python/Python312/python.exe" : "",
-          process.env.LOCALAPPDATA ? process.env.LOCALAPPDATA + "/Programs/Python/Python311/python.exe" : "",
-        ]
-      : [
-          "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
-          "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
-          "/opt/homebrew/bin/python3", "/usr/local/bin/python3", "/usr/bin/python3", "python3",
-        ];
-    for (const c of candidates) {
-      if (!c) continue;
-      try { if (c === "python" || c === "python3" || c === "/usr/bin/python3" || fsD.existsSync(c)) return c; }
-      catch (e) {}
-    }
-    return isWin ? "python" : "python3";
-  };
+  // Python discovery is handled by main.js's findPython() — now cross-platform
+  // (probes `py`/`python`/`python3` + common Windows install paths). No override here.
 
   // extDir → the app directory injected by the shim (where scripts/ lives)
   extDir = function () { return window.__APP_DIR__; };
@@ -318,27 +296,28 @@
   // ── DOM tweaks: relabel & inject desktop-specific controls ────────────────
   function tweakUI() {
     document.title = "Whisper Studio (Desktop)";
-    const v = document.querySelector(".header-right span:last-child");
-    if (v) v.textContent = "Desktop";
+    // Tagline shows "Desktop" — DON'T touch the status-indicator dot.
+    const tag = document.querySelector(".brand-tagline");
+    if (tag) tag.textContent = "Desktop";
 
     // Open-media button + media preview, injected at top of the transcribe controls
     const controls = document.querySelector("#panel-tx-work .controls");
     if (controls) {
       const openBtn = document.createElement("button");
       openBtn.className = "btn-transcribe";
-      openBtn.style.cssText = "margin-top:0;margin-bottom:8px;background:var(--bg3);border:1px solid var(--border2)";
-      openBtn.innerHTML = "📁 &nbsp;Open Video / Audio File";
+      openBtn.style.cssText = "margin-top:0;margin-bottom:10px;background:var(--bg3);border:1px solid var(--border2);box-shadow:none;color:var(--text)";
+      openBtn.innerHTML = "📁 &nbsp;<span>Open Video / Audio File</span>";
       openBtn.setAttribute("data-tip", "Bilgisayardan bir video/ses dosyası seç (pencereye sürükle-bırak da olur)");
       openBtn.onclick = pickMedia;
 
       const nameRow = document.createElement("div");
-      nameRow.style.cssText = "font-size:10px;color:var(--text3);margin-bottom:8px;text-align:center;word-break:break-all";
+      nameRow.style.cssText = "font-size:10px;color:var(--text3);margin-bottom:10px;text-align:center;word-break:break-all";
       nameRow.innerHTML = '<span id="media-name">No file loaded — drag a file here</span>';
 
       mediaEl = document.createElement("video");
       mediaEl.id = "media-preview";
       mediaEl.controls = true;
-      mediaEl.style.cssText = "width:100%;max-height:160px;background:#000;border-radius:6px;margin-bottom:8px;display:none";
+      mediaEl.style.cssText = "width:100%;max-height:220px;background:#000;border-radius:8px;margin-bottom:10px;display:none";
 
       controls.insertBefore(openBtn, controls.firstChild);
       controls.insertBefore(mediaEl, controls.children[1]);

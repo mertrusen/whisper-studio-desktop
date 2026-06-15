@@ -1,7 +1,7 @@
 {
   "name": "whisper-studio-desktop",
   "productName": "Whisper Studio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Local Whisper AI subtitles, audio cleanup & silence cutting — for CapCut and any editor.",
   "main": "electron-main.js",
   "author": "Whisper Studio",
@@ -27,10 +27,15 @@
       "scripts/**/*"
     ],
     "extraResources": [
-      { "from": "scripts", "to": "scripts" }
+      {
+        "from": "scripts",
+        "to": "scripts"
+      }
     ],
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "artifactName": "WhisperStudio-Setup-${version}.${ext}"
     },
     "nsis": {
@@ -39,7 +44,12 @@
       "createDesktopShortcut": true
     },
     "mac": {
-      "target": [{ "target": "dmg", "arch": "universal" }],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": "universal"
+        }
+      ],
       "category": "public.app-category.video",
       "artifactName": "WhisperStudio-${version}-mac.${ext}"
     },

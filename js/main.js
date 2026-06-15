@@ -16,7 +16,7 @@ let lastLanguage = "";
 
 // ── Settings (persisted to localStorage) ──────────────────────────────────
 const DEFAULT_SETTINGS = {
-    engine:          "whisperx",
+    engine:          "auto",      // try whisperx → mlx → openai; works with whatever is installed
     diarize:         false,
     autoPunctuate:   false,
     autoSplit:       true,
@@ -133,7 +133,7 @@ const I18N = {
     sec_engine: "Transcription Engine", sec_cleanup: "Transcript Clean-up",
     sec_audio: "Audio Enhancement", sec_quality: "Subtitle Quality",
     sec_style: "Subtitle Style", sec_karaoke: "Karaoke", sec_timing: "Subtitle Timing",
-    sec_interface: "Interface", lbl_uilang: "Language",
+    sec_interface: "Interface", lbl_uilang: "Language", sec_modellang: "Model & Language",
     // settings items
     nm_engine: "Engine", ds_engine: "WhisperX gives the most accurate word timing + speaker labels",
     nm_diar: "Speaker Labels", ds_diar: "Tags who is speaking. WhisperX only — needs a free HuggingFace token.",
@@ -282,7 +282,7 @@ const I18N = {
     sec_engine: "Transkripsiyon Motoru", sec_cleanup: "Metin Temizliği",
     sec_audio: "Ses İyileştirme", sec_quality: "Altyazı Kalitesi",
     sec_style: "Altyazı Stili", sec_karaoke: "Karaoke", sec_timing: "Altyazı Zamanlaması",
-    sec_interface: "Arayüz", lbl_uilang: "Dil",
+    sec_interface: "Arayüz", lbl_uilang: "Dil", sec_modellang: "Model & Dil",
     nm_engine: "Motor", ds_engine: "WhisperX en doğru kelime zamanı + konuşmacı etiketi verir",
     nm_diar: "Konuşmacı Etiketleri", ds_diar: "Kim konuşuyor etiketler. Sadece WhisperX — ücretsiz HuggingFace token gerekir.",
     nm_autopunct: "Otomatik noktalama", ds_autopunct: "Transkripsiyon biter bitmez noktalama ve büyük harfleri düzeltir",
@@ -454,23 +454,58 @@ const toastEl        = $("toast");
 const setupIndicator = $("setup-indicator");
 const setupBadge     = $("setup-badge");
 
-// ── Python candidates ─────────────────────────────────────────────────────
-const PYTHON_CANDIDATES = [
-    "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
-    "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
-    "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
-    "/opt/homebrew/bin/python3",
-    "/usr/local/bin/python3",
-    "/usr/bin/python3",
-    "python3",
-];
+// ── Python discovery (cross-platform, cached) ─────────────────────────────
+const IS_WIN = (typeof process !== "undefined" && process.platform === "win32");
+let _pythonCache = null;
+
+// Verify a command actually runs (so we never return a python that ENOENTs)
+function _pyWorks(cmd) {
+    try {
+        const { execFileSync } = _req("child_process");
+        execFileSync(cmd, ["--version"], { stdio: "ignore", timeout: 6000, env: spawnEnv() });
+        return true;
+    } catch (e) { return false; }
+}
 
 function findPython() {
-    for (const p of PYTHON_CANDIDATES) {
-        try { if (p === "python3" || p === "/usr/bin/python3" || fs.existsSync(p)) return p; }
-        catch (e) {}
+    if (_pythonCache) return _pythonCache;
+
+    if (IS_WIN) {
+        // 1) The `py` launcher (installed to System32 by python.org → always on PATH),
+        //    then `python` / `python3` if on PATH. Probe each so we pick one that runs.
+        for (const cmd of ["py", "python", "python3"]) {
+            if (_pyWorks(cmd)) { _pythonCache = cmd; return cmd; }
+        }
+        // 2) Common install locations (per-user + system, 3.10–3.13)
+        const la = process.env.LOCALAPPDATA || "";
+        const pf = process.env.PROGRAMFILES || "C:/Program Files";
+        const guesses = [];
+        ["313","312","311","310"].forEach(v => {
+            if (la) guesses.push(`${la}/Programs/Python/Python${v}/python.exe`);
+            guesses.push(`${pf}/Python${v}/python.exe`);
+            guesses.push(`C:/Python${v}/python.exe`);
+        });
+        for (const g of guesses) {
+            try { if (fs.existsSync(g)) { _pythonCache = g; return g; } } catch (e) {}
+        }
+        _pythonCache = "py";
+        return _pythonCache;
     }
-    return "python3";
+
+    // macOS / Linux
+    const candidates = [
+        "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3",
+        "/opt/homebrew/bin/python3",
+        "/usr/local/bin/python3",
+        "/usr/bin/python3",
+    ];
+    for (const p of candidates) {
+        try { if (fs.existsSync(p)) { _pythonCache = p; return p; } } catch (e) {}
+    }
+    _pythonCache = "python3";
+    return _pythonCache;
 }
 
 function extDir()     { return csInterface.getSystemPath(SystemPath.EXTENSION); }
