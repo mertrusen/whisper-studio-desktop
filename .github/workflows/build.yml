@@ -1,8 +1,8 @@
 name: Build
 
-# Builds the Windows installer (.exe) in the cloud — no Windows PC needed.
-# - Every push to main: builds and uploads the .exe as a downloadable artifact.
-# - Every tag like v1.0.0: also publishes a GitHub Release with the .exe attached.
+# Builds the Windows .exe and macOS .dmg in the cloud (no local machine needed).
+# - Push to main: builds both and uploads them as downloadable artifacts.
+# - Tag vX.Y.Z: a single release job publishes ONE GitHub Release with both files.
 
 on:
   push:
@@ -11,67 +11,55 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # needed to create Releases
+  contents: write
 
 jobs:
   windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Windows installer
-        run: npm run dist:win
+        with: { node-version: 20 }
+      - run: npm install
+      - run: npm run dist:win
         env:
-          CSC_IDENTITY_AUTO_DISCOVERY: "false"   # unsigned build (no code-sign cert)
-
-      - name: Upload installer artifact
-        uses: actions/upload-artifact@v4
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - uses: actions/upload-artifact@v4
         with:
-          name: WhisperStudio-Windows-Setup
+          name: win-installer
           path: dist/*.exe
           if-no-files-found: error
-
-      - name: Publish Release (on tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*.exe
-          generate_release_notes: true
 
   macos:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build macOS app (universal .dmg)
-        run: npm run dist:mac
+        with: { node-version: 20 }
+      - run: npm install
+      - run: npm run dist:mac
         env:
-          CSC_IDENTITY_AUTO_DISCOVERY: "false"   # unsigned build (no Apple cert)
-
-      - name: Upload .dmg artifact
-        uses: actions/upload-artifact@v4
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - uses: actions/upload-artifact@v4
         with:
-          name: WhisperStudio-macOS
+          name: mac-installer
           path: dist/*.dmg
           if-no-files-found: error
 
-      - name: Publish Release (on tag)
-        if: startsWith(github.ref, 'refs/tags/')
+  # One release, created after BOTH builds finish (avoids the create-release race).
+  release:
+    needs: [windows, macos]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.dmg
+          files: |
+            artifacts/win-installer/*.exe
+            artifacts/mac-installer/*.dmg
           generate_release_notes: true
+          fail_on_unmatched_files: true
