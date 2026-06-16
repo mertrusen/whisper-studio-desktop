@@ -556,7 +556,13 @@ function extDir()     { return csInterface.getSystemPath(SystemPath.EXTENSION); 
 function scriptsDir() { return path.join(extDir(), "scripts"); }
 
 // ── Run Python script ─────────────────────────────────────────────────────
+// Augment PATH so spawned tools (python/ffmpeg) are found. On macOS, GUI apps
+// launch without Homebrew dirs in PATH, so prepend them (':' separator). On
+// Windows we must NOT touch PATH — its separator is ';' and the real PATH
+// already has Python/ffmpeg; prepending POSIX paths would CORRUPT it (this was
+// the root cause of "Could not run Python" on Windows).
 function spawnEnv() {
+    if (IS_WIN) return Object.assign({}, process.env);
     const extra = "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin";
     const cur   = process.env.PATH || "";
     return Object.assign({}, process.env, {
@@ -2395,8 +2401,8 @@ function renderChecks(data) {
     const keys = [
         { key: "python"     },
         { key: "ffmpeg"     },
-        { key: "whisperx"   },
-        { key: "whisper"    },
+        { key: "whisper"    },   // openai-whisper — the reliable baseline engine
+        { key: "whisperx"   },   // optional, advanced
         { key: "mlx_whisper"},
         { key: "punctuation"},
     ];

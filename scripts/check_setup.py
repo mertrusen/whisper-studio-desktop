@@ -102,9 +102,11 @@ def check():
         out["whisperx"] = {"status": "ok", "label": "WhisperX (word-level + speakers) ★",
                            "optional": True, "detail": "v%s — best word timing & diarization" % ver}
     except Exception:
+        wx_detail = ("Optional. Often fails to install on Windows — use openai-whisper below instead."
+                     if IS_WIN else "Word-level timestamps + speaker labels — optional, not installed")
         out["whisperx"] = {
-            "status": "missing", "label": "WhisperX (recommended)", "optional": True,
-            "detail": "Word-level timestamps + speaker labels — not installed",
+            "status": "missing", "label": "WhisperX (optional)", "optional": True,
+            "detail": wx_detail,
             "fix_type": "pip", "fix_pkg": "whisperx",
             "fix_cmd": pip_cmd("whisperx"), "fix_label": "Install automatically",
         }
