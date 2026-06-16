@@ -136,14 +136,11 @@ body { display: flex; flex-direction: column; }
 .brand-tagline { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; font-weight: 500; }
 .header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
-.lang-select {
-  background: var(--bg3); border: 1px solid var(--border); color: var(--text2);
-  font-size: 11px; font-weight: 600; padding: 4px 20px 4px 8px; border-radius: 7px;
-  cursor: pointer; outline: none; -webkit-appearance: none; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%238a8a8e'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 7px center;
-}
-.lang-select:hover { background: var(--bg-hover); color: var(--text); }
+/* Mini segmented control (header language EN/TR) */
+.seg-mini { display: inline-flex; padding: 2px; background: var(--bg3); border-radius: 8px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2); }
+.seg-mini button { border: none; background: transparent; color: var(--text2); font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; cursor: pointer; transition: all .15s var(--ease); letter-spacing: 0; }
+.seg-mini button:hover { color: var(--text); }
+.seg-mini button.active { background: var(--seg-active); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12); }
 
 .setup-indicator { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; transition: background .3s; }
 .setup-indicator.ok      { background: var(--green); }
@@ -235,8 +232,8 @@ select {
   background-repeat: no-repeat; background-position: right 9px center;
 }
 select:hover { background: var(--bg-hover); }
-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
-select option { background: #2a2a2c; color: var(--text); }
+select:focus, select:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+select option { background: var(--bg3); color: var(--text); }
 
 /* Primary button — flat solid accent (Apple) */
 .btn-transcribe {

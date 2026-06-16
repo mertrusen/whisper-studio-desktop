@@ -18,10 +18,10 @@
     </div>
     <div class="header-right">
       <button id="theme-btn" class="icon-btn" onclick="cycleTheme()" data-i18n-tip="tip_theme"></button>
-      <select id="header-lang" class="lang-select" onchange="setLanguage(this.value)" data-i18n-tip="tip_uilang">
-        <option value="en">EN</option>
-        <option value="tr">TR</option>
-      </select>
+      <div class="seg-mini" id="lang-seg" data-i18n-tip="tip_uilang">
+        <button data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button data-lang="tr" onclick="setLanguage('tr')">TR</button>
+      </div>
       <span class="setup-indicator" id="setup-indicator" data-i18n-tip="tip_tab_setup"></span>
     </div>
   </div>

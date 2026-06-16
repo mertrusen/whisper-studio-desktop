@@ -443,7 +443,8 @@ function setLanguage(lang) {
         ? icon("pause") + "<span>" + t("btn_pause") + "</span>"
         : icon("play")  + "<span>" + t("btn_play")  + "</span>";
     const langSel = $("set-uilang"); if (langSel) langSel.value = settings.uiLang;
-    const langSelH = $("header-lang"); if (langSelH) langSelH.value = settings.uiLang;
+    const seg = $("lang-seg");
+    if (seg) seg.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.getAttribute("data-lang") === settings.uiLang));
 }
 
 // ── Icon system (clean line icons, no emoji) ───────────────────────────────
@@ -2609,7 +2610,8 @@ function initTooltips() {
     applyTheme();   // refresh theme-btn icon now that icon() output is in place
     renderSegments();
     initTooltips();
-    const hl = $("header-lang"); if (hl) hl.value = settings.uiLang;
+    const lseg = $("lang-seg");
+    if (lseg) lseg.querySelectorAll("button").forEach(b => b.classList.toggle("active", b.getAttribute("data-lang") === settings.uiLang));
     setStatus(t("status_ready"), "info");
     sendBtn.disabled         = true;
     setupIndicator.className = "setup-indicator loading";
