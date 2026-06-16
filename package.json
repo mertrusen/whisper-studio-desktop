@@ -1,7 +1,7 @@
 {
   "name": "subsper",
   "productName": "Subsper",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Subsper — local AI subtitles, audio cleanup & silence cutting for CapCut and any editor.",
   "main": "electron-main.js",
   "author": "Whisper Studio",

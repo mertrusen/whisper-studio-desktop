@@ -411,23 +411,40 @@ mark.find-hit { background: var(--yellow); color: #1a1206; border-radius: 3px; p
 }
 .ws-tooltip.show { opacity: 1; transform: none; }
 
-/* ── Icon system (SVG line icons) ────────────────────────────────── */
-.ic { display: inline-flex; align-items: center; justify-content: center; width: 1.1em; height: 1.1em; flex-shrink: 0; line-height: 0; }
-.ic-sm { width: 0.92em; height: 0.92em; }
-.svg-ic { width: 100%; height: 100%; display: block; }
-.brand-mark svg { width: 17px; height: 17px; }
-.tab-ico { width: 1.25em; height: 1.25em; }
-.btn-transcribe .ico { width: 1.2em; height: 1.2em; }
-/* make icon-bearing buttons center their contents */
+/* ── Icon system (SVG line icons) ────────────────────────────────────
+   CRITICAL: never size icons with width:100% — JS inserts bare <svg> into
+   buttons (play/pause, segment buttons), so a fixed size is the only safe
+   default. Icons are sized by their context below, defaulting to 15px. */
+.ic { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; line-height: 0; }
+.svg-ic { width: 15px; height: 15px; display: inline-block; flex-shrink: 0; vertical-align: -2px; }
+
+/* Context sizes */
+.brand-mark .svg-ic { width: 17px; height: 17px; }
+.tab .svg-ic { width: 16px; height: 16px; }
+.sub-tab .svg-ic { width: 13px; height: 13px; }
+.btn-transcribe .svg-ic { width: 17px; height: 17px; }
+.btn-transcribe.btn-compact .svg-ic { width: 15px; height: 15px; }
+.btn-load-srt .svg-ic, .btn-playpause .svg-ic, .btn-send .svg-ic { width: 15px; height: 15px; }
+.actions-bar .btn-secondary .svg-ic { width: 15px; height: 15px; }
+.seg-btn .svg-ic { width: 14px; height: 14px; }
+.error-close .svg-ic { width: 13px; height: 13px; }
+.srt-saved-header .svg-ic, .error-header .svg-ic { width: 14px; height: 14px; }
+.btn-recheck .svg-ic, .btn-reload .svg-ic, .btn-reveal .svg-ic { width: 14px; height: 14px; }
+.empty-state .icon .svg-ic { width: 46px; height: 46px; opacity: .8; }
+.check-icon .svg-ic { width: 16px; height: 16px; }
+.check-icon.check-ok   { color: var(--green); }
+.check-icon.check-warn { color: var(--yellow); }
+.check-icon.check-bad  { color: var(--red2); }
+.check-icon.check-opt  { color: var(--text3); }
+.check-detail.warn { color: var(--yellow); }
+
+/* Center contents of icon-bearing buttons */
 .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .btn-recheck, .btn-reload { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
 .btn-reveal { display: inline-flex; align-items: center; gap: 5px; }
 .error-close { display: inline-flex; align-items: center; }
-.error-close .ic { width: 13px; height: 13px; }
-.srt-saved-header span .ic, .error-header span .ic { width: 14px; height: 14px; vertical-align: -2px; }
 .btn-secondary.busy { opacity: .55; }
-.seg-btn .ic { width: 13px; height: 13px; }
-.empty-state .icon .svg-ic { width: 44px; height: 44px; opacity: .85; }
+.empty-state .icon { line-height: 0; }
 
 /* ── Full-screen / wide-window optimization ──────────────────────────
    On a maximized desktop window the content centers into a comfortable

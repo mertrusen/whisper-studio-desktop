@@ -2403,14 +2403,22 @@ function renderChecks(data) {
     let html = "";
     for (const { key } of keys) {
         const c = data[key]; if (!c) continue;
-        const ok  = c.status === "ok";
+        const st = c.status;             // ok | warn | missing | na
+        const ok = st === "ok";
         const opt = c.optional;
+        let ico, cls;
+        if (st === "ok")        { ico = icon("check"); cls = "ok"; }
+        else if (st === "warn") { ico = icon("alert"); cls = "warn"; }
+        else if (st === "na")   { ico = icon("close"); cls = "opt"; }
+        else if (opt)           { ico = icon("close"); cls = "opt"; }
+        else                    { ico = icon("close"); cls = "bad"; }
+        const showFix = (st === "missing" || (!ok && !opt && st !== "na")) && c.fix_cmd;
         html += `<div class="check-item">
-          <div class="check-icon">${ok ? "✅" : (opt ? "⚪" : "❌")}</div>
+          <div class="check-icon check-${cls}">${ico}</div>
           <div class="check-body">
             <div class="check-name">${c.label}</div>
-            <div class="check-detail ${ok ? "ok" : (opt ? "opt" : "bad")}">${c.detail || ""}</div>
-            ${!ok && c.fix_cmd ? renderFixRow(key, c) : ""}
+            <div class="check-detail ${cls}">${c.detail || ""}</div>
+            ${showFix ? renderFixRow(key, c) : ""}
           </div>
         </div>`;
     }

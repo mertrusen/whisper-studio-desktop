@@ -52,12 +52,18 @@ def ffmpeg_fix():
 def check():
     out = {}
 
+    vmaj, vmin = sys.version_info.major, sys.version_info.minor
+    ver = "%d.%d.%d" % (vmaj, vmin, sys.version_info.micro)
+    # Whisper / WhisperX wheels are most reliable on Python 3.10–3.11. 3.12+ often
+    # fails to build deps (numba/llvmlite, torch). Flag it so the user knows.
+    py_too_new = (vmaj == 3 and vmin >= 12)
     out["python"] = {
-        "status": "ok",
+        "status": "warn" if py_too_new else "ok",
         "label":  "Python",
-        "version": "%d.%d.%d" % (sys.version_info.major, sys.version_info.minor, sys.version_info.micro),
+        "version": ver,
         "path":   PY,
-        "detail": "Python %d.%d.%d — %s" % (sys.version_info.major, sys.version_info.minor, sys.version_info.micro, PY),
+        "detail": ("Python %s — ⚠ 3.12+ can fail to install Whisper. Install Python 3.11 for best results." % ver)
+                  if py_too_new else ("Python %s — %s" % (ver, PY)),
     }
 
     ffmpeg = find_ffmpeg()
@@ -158,7 +164,7 @@ def check():
         or out.get("whisperx", {}).get("status") == "ok"
         or out.get("mlx_whisper", {}).get("status") == "ok"
     )
-    out["_ready"] = (out["python"]["status"] == "ok" and out["ffmpeg"]["status"] == "ok" and any_engine)
+    out["_ready"] = (out["python"]["status"] in ("ok", "warn") and out["ffmpeg"]["status"] == "ok" and any_engine)
     out["_os"] = "win" if IS_WIN else "mac"
     return out
 
