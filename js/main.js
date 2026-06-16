@@ -532,44 +532,52 @@ const setupIndicator = $("setup-indicator");
 const setupBadge     = $("setup-badge");
 
 // ── Python discovery (cross-platform, cached) ─────────────────────────────
+// Returns a FULL path to a python executable whenever possible. A full path is
+// immune to PATH/launcher resolution problems that break a bare `spawn("py")`
+// inside a packaged GUI app (the cause of "Could not run Python" on Windows
+// even when `py` works in the terminal).
 const IS_WIN = (typeof process !== "undefined" && process.platform === "win32");
 let _pythonCache = null;
 
-// Verify a command actually runs (so we never return a python that ENOENTs)
-function _pyWorks(cmd) {
+// Ask a launcher for its real interpreter path, going THROUGH the shell so it
+// resolves exactly like the user's Terminal/CMD does.
+function _resolvePythonViaShell(launcher) {
     try {
-        const { execFileSync } = _req("child_process");
-        execFileSync(cmd, ["--version"], { stdio: "ignore", timeout: 6000, env: spawnEnv() });
-        return true;
-    } catch (e) { return false; }
+        const { execSync } = _req("child_process");
+        const out = execSync(`${launcher} -c "import sys;print(sys.executable)"`, {
+            timeout: 9000, windowsHide: true, stdio: ["ignore", "pipe", "ignore"],
+        }).toString().trim();
+        if (out && fs.existsSync(out)) return out;
+    } catch (e) {}
+    return null;
 }
 
 function findPython() {
     if (_pythonCache) return _pythonCache;
 
     if (IS_WIN) {
-        // 1) The `py` launcher (installed to System32 by python.org → always on PATH),
-        //    then `python` / `python3` if on PATH. Probe each so we pick one that runs.
-        for (const cmd of ["py", "python", "python3"]) {
-            if (_pyWorks(cmd)) { _pythonCache = cmd; return cmd; }
+        // 1) Resolve a real python.exe via the launcher (shell-resolved, like terminal)
+        for (const launcher of ["py -3", "py", "python", "python3"]) {
+            const full = _resolvePythonViaShell(launcher);
+            if (full) { _pythonCache = full; return full; }
         }
-        // 2) Common install locations (per-user + system, 3.10–3.13)
+        // 2) Scan standard install locations directly (per-user + system, 3.10–3.13)
         const la = process.env.LOCALAPPDATA || "";
-        const pf = process.env.PROGRAMFILES || "C:/Program Files";
+        const pf = process.env.PROGRAMFILES || "C:\\Program Files";
         const guesses = [];
-        ["313","312","311","310"].forEach(v => {
-            if (la) guesses.push(`${la}/Programs/Python/Python${v}/python.exe`);
-            guesses.push(`${pf}/Python${v}/python.exe`);
-            guesses.push(`C:/Python${v}/python.exe`);
+        ["313", "312", "311", "310"].forEach(v => {
+            if (la) guesses.push(`${la}\\Programs\\Python\\Python${v}\\python.exe`);
+            guesses.push(`${pf}\\Python${v}\\python.exe`);
+            guesses.push(`C:\\Python${v}\\python.exe`);
         });
         for (const g of guesses) {
             try { if (fs.existsSync(g)) { _pythonCache = g; return g; } } catch (e) {}
         }
-        _pythonCache = "py";
+        _pythonCache = "py";   // last resort
         return _pythonCache;
     }
 
-    // macOS / Linux
+    // macOS / Linux — known absolute locations first, then shell-resolved
     const candidates = [
         "/Library/Frameworks/Python.framework/Versions/3.13/bin/python3",
         "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
@@ -581,7 +589,8 @@ function findPython() {
     for (const p of candidates) {
         try { if (fs.existsSync(p)) { _pythonCache = p; return p; } } catch (e) {}
     }
-    _pythonCache = "python3";
+    const shellResolved = _resolvePythonViaShell("python3") || _resolvePythonViaShell("python");
+    _pythonCache = shellResolved || "python3";
     return _pythonCache;
 }
 

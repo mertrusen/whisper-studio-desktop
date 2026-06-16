@@ -54,16 +54,14 @@ def check():
 
     vmaj, vmin = sys.version_info.major, sys.version_info.minor
     ver = "%d.%d.%d" % (vmaj, vmin, sys.version_info.micro)
-    # Whisper / WhisperX wheels are most reliable on Python 3.10–3.11. 3.12+ often
-    # fails to build deps (numba/llvmlite, torch). Flag it so the user knows.
-    py_too_new = (vmaj == 3 and vmin >= 12)
+    # 3.13+ occasionally needs newer wheels; just a gentle tip, not an error.
+    note = "  ·  Tip: if an engine fails to install, Python 3.11 is the safest." if (vmaj == 3 and vmin >= 13) else ""
     out["python"] = {
-        "status": "warn" if py_too_new else "ok",
+        "status": "ok",
         "label":  "Python",
         "version": ver,
         "path":   PY,
-        "detail": ("Python %s — ⚠ 3.12+ can fail to install Whisper. Install Python 3.11 for best results." % ver)
-                  if py_too_new else ("Python %s — %s" % (ver, PY)),
+        "detail": "Python %s%s" % (ver, note),
     }
 
     ffmpeg = find_ffmpeg()
