@@ -2461,7 +2461,7 @@ function renderChecks(data) {
           </div>
         </div>`;
     }
-    $("checks-list").innerHTML = html;
+    $("checks-list").innerHTML = `<div class="glist">${html}</div>`;
 }
 
 function renderFixRow(key, c) {
@@ -2519,12 +2519,12 @@ function renderModels(models) {
           </div>`;
         return;
     }
-    $("models-list").innerHTML = models.cached.map(m => `
+    $("models-list").innerHTML = `<div class="glist">` + models.cached.map(m => `
       <div class="model-item">
         <div class="model-dot"></div>
         <div class="model-name">${m.label}</div>
         <div class="model-size">${m.size_mb} MB</div>
-      </div>`).join("");
+      </div>`).join("") + `</div>`;
 }
 
 // OS-aware install guidance (Windows vs macOS)

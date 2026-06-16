@@ -207,11 +207,12 @@ body { display: flex; flex-direction: column; }
 
 select {
   flex: 1; background: var(--bg3); border: 1px solid var(--border);
-  color: var(--text); padding: 8px 26px 8px 10px; border-radius: var(--radius-sm);
-  font-size: 12px; outline: none; cursor: pointer; font-family: var(--font);
+  color: var(--text); padding: 7px 28px 7px 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; outline: none; cursor: pointer; font-family: var(--font);
   -webkit-appearance: none; appearance: none; transition: border-color .15s, background .15s;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a8a8e'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
+  /* Apple pop-up button — stacked up/down chevrons */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='15' fill='none' stroke='%238a8a8e' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.2 6L5.5 3.6 7.8 6'/%3E%3Cpath d='M3.2 9L5.5 11.4 7.8 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 9px center;
 }
 select:hover { background: var(--bg-hover); }
 select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
@@ -360,7 +361,11 @@ mark.find-hit { background: var(--yellow); color: #1a1206; border-radius: 3px; p
 
 .check-loading { color: var(--text3); font-size: 11.5px; padding: 4px 0; }
 
-.check-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 12px; border-radius: var(--radius); background: var(--bg2); border: 1px solid var(--border); margin-bottom: 7px; }
+/* Grouped list (Apple inset list) for Setup checks & models */
+.glist { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.glist .check-item + .check-item, .glist .model-item + .model-item { border-top: 1px solid var(--border); }
+
+.check-item { display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px; background: none; border: none; border-radius: 0; margin: 0; }
 .check-icon { flex-shrink: 0; margin-top: 1px; line-height: 0; }
 .check-body { flex: 1; min-width: 0; }
 .check-name  { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
@@ -378,7 +383,7 @@ mark.find-hit { background: var(--yellow); color: #1a1206; border-radius: 3px; p
 .btn-install:disabled { background: var(--bg3); color: var(--text-lo); cursor: not-allowed; }
 .btn-install.installing { background: var(--accent-dk); }
 
-.model-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius); background: var(--bg2); border: 1px solid var(--border); margin-bottom: 6px; font-size: 12px; }
+.model-item { display: flex; align-items: center; gap: 11px; padding: 11px 14px; background: none; border: none; border-radius: 0; margin: 0; font-size: 12px; }
 .model-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 .model-name { flex: 1; color: var(--text); }
 .model-size { color: var(--text3); font-size: 10.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -394,9 +399,17 @@ mark.find-hit { background: var(--yellow); color: #1a1206; border-radius: 3px; p
 .btn-recheck, .btn-reload { flex: 1; padding: 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; cursor: pointer; transition: background .15s; }
 .btn-recheck:hover, .btn-reload:hover { background: var(--bg-hover); }
 
-/* ── Settings items ──────────────────────────────────────────────── */
-.setting-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 14px; margin-bottom: 9px; }
-.setting-row { display: flex; align-items: flex-start; gap: 12px; }
+/* ── Settings items — Apple inset grouped list ───────────────────── */
+.setting-item { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 0 14px; margin-bottom: 16px; overflow: hidden; }
+.setting-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; min-height: 44px; }
+.setting-row .setting-info { align-self: center; }
+/* hairline separators between rows in the same group (inset to content) */
+.setting-item > .setting-row + .setting-row,
+.setting-item > .setting-sub + .setting-row,
+.setting-item > .setting-row + .setting-sub,
+.setting-item > .setting-sub + .setting-sub { border-top: 1px solid var(--border); margin-top: 0 !important; }
+.setting-sub { padding: 12px 0; }
+.setting-item > .setting-sub:first-child { border-top: none; }
 .setting-info { flex: 1; min-width: 0; }
 .setting-name { font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
 .setting-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
@@ -410,7 +423,6 @@ mark.find-hit { background: var(--yellow); color: #1a1206; border-radius: 3px; p
 .toggle input:checked + .toggle-track { background: var(--green); }
 .toggle input:checked + .toggle-track::before { transform: translateX(15px); }
 
-.setting-sub { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
 .setting-slider-header { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text2); margin-bottom: 8px; font-weight: 500; }
 .setting-value { font-size: 11.5px; font-weight: 600; color: var(--accent2); font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .setting-slider { width: 100%; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; background: var(--bg-hover); outline: none; cursor: pointer; display: block; }
